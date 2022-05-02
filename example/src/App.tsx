@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import RadioPlayer, {
   RadioPlayerEvents,
-  RadioPlayerMetadata,
 } from 'react-native-radio-player';
 
 export default function App() {
   const [playerState, setPlayerState] = React.useState<string>('stopped');
-  const [metadata, setMetadata] = React.useState<RadioPlayerMetadata>();
+  const [channel, setChannel] = React.useState<string>('https://radior.ice.infomaniak.ch/radior-96.aac');
+  const [metadata, setMetadata] = React.useState();
 
   React.useEffect(() => {
     RadioPlayerEvents.addListener('StateDidChange', (eventObject) => {
@@ -28,12 +28,15 @@ export default function App() {
   }, []);
 
   React.useEffect(() => {
-    RadioPlayer.radioURLWithMetadataSeparator('https://stream.fr.morow.com/morow_med.mp3', '-');
-    // RadioPlayer.radioURL('https://stream.fr.morow.com/morow_med.mp3');
+    RadioPlayer.radioURLWithMetadataSeparator(channel, '-');
     return () => {
-      RadioPlayer.stop();
+      RadioPlayer.play();
     };
-  }, []);
+  }, [channel]);
+
+  React.useEffect(() => { 
+    
+   }, []);
 
   let play = () => {
     RadioPlayer.play();
@@ -43,6 +46,21 @@ export default function App() {
     RadioPlayer.stop();
   };
 
+  const setLouange = (language: string) => {
+    RadioPlayer.stop();
+    setChannel('https://radiorlouange.ice.infomaniak.ch/radiorlouange-96.aac')
+  }
+
+  const setRadio = (language: string) => {
+    RadioPlayer.stop();
+    setChannel('https://radior.ice.infomaniak.ch/radior-96.aac')
+  }
+  const setRadioRap = (language: string) => {
+    RadioPlayer.stop();
+    setChannel('https://rcommerap.ice.infomaniak.ch/rcommerap-96.aac')
+  }
+
+  console.log(metadata);
   return (
     <View style={styles.container}>
       <View style={styles.container}>
@@ -61,6 +79,20 @@ export default function App() {
           title="Stop"
           onPress={stop}
           disabled={playerState === 'stopped' ? true : false}
+        />
+      </View>
+      <View style={[styles.container, styles.actions]}>
+        <Button
+          title="set Louange"
+          onPress={setLouange}
+        />
+        <Button
+          title="Set Radio R"
+          onPress={setRadio}
+        />        
+        <Button
+          title="Set Radio Rap"
+          onPress={setRadioRap}
         />
       </View>
       <View style={styles.container}>
